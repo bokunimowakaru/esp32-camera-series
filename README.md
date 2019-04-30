@@ -1,4 +1,4 @@
-# TTGO Camera  
+# TTGO T-Camera ESP32  
 forked by Wataru KUNINO  
 
 TTGO T-Cameraの人感センサが作動したときにUDPブロードキャストを送信します。  
@@ -17,8 +17,8 @@ esp32-camera-series.ino の下記の部分を変更してください。
 
 
 ## コンパイル方法
-Arduino IDEに、[arduino-esp32](https://github.com/espressif/arduino-esp32/releases)ならびに[esp8266-oled-ssd1306](https://github.com/ThingPulse/esp8266-oled-ssd1306) を組み込んで、コンパイルを行います。arduino-esp32のバージョンは 1.0.2 を使用しました。  
-※ご注意：1.0.0では動作しないことを確認しています。  
+Arduino IDEに、[arduino-esp32](https://github.com/espressif/arduino-esp32/releases)ならびに[esp8266-oled-ssd1306](https://github.com/ThingPulse/esp8266-oled-ssd1306) を組み込んで、コンパイルを行います。arduino-esp32のは 1.0.2 を使用しました。  
+※ご注意：バージョン1.0.0には本カメラ用ライブラリが含まれていないので、動作しません。  
 
 コンパイル時に必要なライブラリ：  
 * arduino-esp32：https://github.com/espressif/arduino-esp32/releases
@@ -27,7 +27,15 @@ Arduino IDEに、[arduino-esp32](https://github.com/espressif/arduino-esp32/releas
 Arduino IDEの[ツール]メニュー⇒[ボード]から、「ESP32 Wrover Module」を選択してください。  
 PSRAMを使用しているので、PSRAMの有効／無効の設定が表示された場合は、必ず「有効」にしてください。  
 
-- OLED requires  library support
+* Arduino IDE：[ツール]⇒[ボード]⇒[ESP32 Wrover Module]
+* PSRAM : Enable
+
+## 関連情報
+
+* [2000円のTTGO T-Camera：Wi-Fi＋広角レンズ付カメラ＋OLED＋人感センサ](https://bokunimo.net/blog/esp/12/)(当方ブログ)
+* 製品の販売サイト：<https://www.aliexpress.com/item//32968683765.html>
+* 販売者GitHub：<https://github.com/Xinyuan-LilyGO/esp32-camera-bme280>
+* 開発者GitHub：<https://github.com/lewisxhe/esp32-camera-series>
 
 ## このソースコードには、下記の製作物が含まれます。
 * カメラ管理部：https://github.com/lewisxhe/esp32-camera-series  
@@ -91,7 +99,3 @@ TTGO-Camera-Series
 * RESET BUTTON: When the battery is powered, click to turn on the power
 
 * PIR: Detecting human motion and will display the first screen
-
-
-## Test Video
-[YouTube](https://www.youtube.com/watch?v=CibcsmurTbo)
