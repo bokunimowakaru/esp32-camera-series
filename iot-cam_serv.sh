@@ -24,7 +24,7 @@ while true; do                                      # 永遠に繰り返し
     DATE=`date "+%Y/%m/%d %R"`                      # 日時を取得
     DEV=${UDP#,*}                                   # デバイス名を取得(前方)
     DEV=${DEV%%,*}                                  # デバイス名を取得(後方)
-    echo -E $DATE, $UDP|tee -a log_$DEV.csv         # 取得日時とデータを保存
+#   echo -E $DATE, $UDP|tee -a log_$DEV.csv         # 取得日時とデータを保存
     CAM=0                                           # 変数CAMの初期化
     case "$DEV" in                                  # DEVの内容に応じて
         "rd_sw_"? ) DET=`echo -E $UDP|tr -d ' '|cut -d, -f2`
