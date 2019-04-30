@@ -12,7 +12,7 @@ STAモード、SSID=1234ABCD、パスワード=passwordを設定しました。
 
 ## SSIDの変更方法
 
-esp32-camera-series.ino の下記の部分を変更してください。  
+iot-camera.ino の下記の部分を変更してください。  
 
 	/***************************************
 	 *  WiFi
