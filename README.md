@@ -1,13 +1,18 @@
-# TTGO T-Camera ESP32  
+# TTGO T-Camera ESP32 OV2640  
 forked by Wataru KUNINO  
 
-TTGO T-Camera‚ÌlŠ´ƒZƒ“ƒT‚ªì“®‚µ‚½‚Æ‚«‚ÉUDPƒuƒ[ƒhƒLƒƒƒXƒg‚ğ‘—M‚µ‚Ü‚·B  
-STAƒ‚[ƒhASSID=1234ABCDAƒpƒXƒ[ƒh=password‚ğİ’è‚µ‚Ü‚µ‚½B  
-‚»‚Ì‘¼‚Ì‹@”\‚É‚Â‚¢‚Ä‚Í‚Í TTGO-Camera-Series (Œ´ìÒFlewisxhe)‚Ì‚à‚Ì‚È‚Ç‚ğ—¬—p‚µ‚Ä‚¢‚Ü‚·B
+Wi-Fiï¼‹ã‚«ãƒ¡ãƒ©æ­è¼‰ãƒœãƒ¼ãƒ‰TTGO T-Camera ESP32ãŒã€äººä½“ãªã©ã®å‹•ãã‚’æ¤œå‡ºã™ã‚‹ã¨ã€Raspberry Piã¸å†™çœŸã‚’ä¿å­˜ã—ã¾ã™ã€‚
 
-## SSID‚Ì•ÏX•û–@
+* Wi-Fi ãƒã‚¤ã‚³ãƒ³ESP32ã¨ã€JPEGã‚«ãƒ¡ãƒ©PV2640ã‚’æ­è¼‰ã—ãŸTTGO T-Cameraç”¨ã®ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã§ã™ã€‚  
+* TTGO T-Cameraã®äººæ„Ÿã‚»ãƒ³ã‚µãŒä½œå‹•ã—ãŸã¨ãã«UDPãƒ–ãƒ­ãƒ¼ãƒ‰ã‚­ãƒ£ã‚¹ãƒˆã‚’é€ä¿¡ã—ã¾ã™ã€‚  
+* UDPãƒ–ãƒ­ãƒ¼ãƒ‰ã‚­ãƒ£ã‚¹ãƒˆã‚’å—ã‘ãŸ Raspberry Pi ãªã©ã«æ’®å½±ã—ãŸå†™çœŸã‚’ä¿å­˜ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã™ã€‚  
 
-esp32-camera-series.ino ‚Ì‰º‹L‚Ì•”•ª‚ğ•ÏX‚µ‚Ä‚­‚¾‚³‚¢B  
+STAãƒ¢ãƒ¼ãƒ‰ã€SSID=1234ABCDã€ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰=passwordã‚’è¨­å®šã—ã¾ã—ãŸã€‚  
+ãã®ä»–ã®æ©Ÿèƒ½ã«ã¤ã„ã¦ã¯ã¯ TTGO-Camera-Series (åŸä½œè€…ï¼šlewisxhe)ã®ã‚‚ã®ãªã©ã‚’æµç”¨ã—ã¦ã„ã¾ã™ã€‚
+
+## SSIDã®å¤‰æ›´æ–¹æ³•
+
+esp32-camera-series.ino ã®ä¸‹è¨˜ã®éƒ¨åˆ†ã‚’å¤‰æ›´ã—ã¦ãã ã•ã„ã€‚  
 
 	/***************************************
 	 *  WiFi
@@ -16,36 +21,36 @@ esp32-camera-series.ino ‚Ì‰º‹L‚Ì•”•ª‚ğ•ÏX‚µ‚Ä‚­‚¾‚³‚¢B
 	#define WIFI_PASSWD "password"          // your wifi password
 
 
-## ƒRƒ“ƒpƒCƒ‹•û–@
-Arduino IDE‚ÉA[arduino-esp32](https://github.com/espressif/arduino-esp32/releases)‚È‚ç‚Ñ‚É[esp8266-oled-ssd1306](https://github.com/ThingPulse/esp8266-oled-ssd1306) ‚ğ‘g‚İ‚ñ‚ÅAƒRƒ“ƒpƒCƒ‹‚ğs‚¢‚Ü‚·Barduino-esp32‚Ì‚Í 1.0.2 ‚ğg—p‚µ‚Ü‚µ‚½B  
-¦‚²’ˆÓFƒo[ƒWƒ‡ƒ“1.0.0‚É‚Í–{ƒJƒƒ‰—pƒ‰ƒCƒuƒ‰ƒŠ‚ªŠÜ‚Ü‚ê‚Ä‚¢‚È‚¢‚Ì‚ÅA“®ì‚µ‚Ü‚¹‚ñB  
+## ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ–¹æ³•
+Arduino IDEã«ã€[arduino-esp32](https://github.com/espressif/arduino-esp32/releases)ãªã‚‰ã³ã«[esp8266-oled-ssd1306](https://github.com/ThingPulse/esp8266-oled-ssd1306) ã‚’çµ„ã¿è¾¼ã‚“ã§ã€ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚’è¡Œã„ã¾ã™ã€‚arduino-esp32ã®ã¯ 1.0.2 ã‚’ä½¿ç”¨ã—ã¾ã—ãŸã€‚  
+â€»ã”æ³¨æ„ï¼šãƒãƒ¼ã‚¸ãƒ§ãƒ³1.0.0ã«ã¯æœ¬ã‚«ãƒ¡ãƒ©ç”¨ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãŒå«ã¾ã‚Œã¦ã„ãªã„ã®ã§ã€å‹•ä½œã—ã¾ã›ã‚“ã€‚  
 
-ƒRƒ“ƒpƒCƒ‹‚É•K—v‚Èƒ‰ƒCƒuƒ‰ƒŠF  
-* arduino-esp32Fhttps://github.com/espressif/arduino-esp32/releases
+ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«å¿…è¦ãªãƒ©ã‚¤ãƒ–ãƒ©ãƒªï¼š  
+* arduino-esp32ï¼šhttps://github.com/espressif/arduino-esp32/releases
 * esp8266-oled-ssd1306 https://github.com/ThingPulse/esp8266-oled-ssd1306
 
-Arduino IDE‚Ì[ƒc[ƒ‹]ƒƒjƒ…[Ë[ƒ{[ƒh]‚©‚çAuESP32 Wrover Modulev‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B  
-PSRAM‚ğg—p‚µ‚Ä‚¢‚é‚Ì‚ÅAPSRAM‚Ì—LŒø^–³Œø‚Ìİ’è‚ª•\¦‚³‚ê‚½ê‡‚ÍA•K‚¸u—LŒøv‚É‚µ‚Ä‚­‚¾‚³‚¢B  
+Arduino IDEã®[ãƒ„ãƒ¼ãƒ«]ãƒ¡ãƒ‹ãƒ¥ãƒ¼â‡’[ãƒœãƒ¼ãƒ‰]ã‹ã‚‰ã€ã€ŒESP32 Wrover Moduleã€ã‚’é¸æŠã—ã¦ãã ã•ã„ã€‚  
+PSRAMã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹ã®ã§ã€PSRAMã®æœ‰åŠ¹ï¼ç„¡åŠ¹ã®è¨­å®šãŒè¡¨ç¤ºã•ã‚ŒãŸå ´åˆã¯ã€å¿…ãšã€Œæœ‰åŠ¹ã€ã«ã—ã¦ãã ã•ã„ã€‚  
 
-* Arduino IDEF[ƒc[ƒ‹]Ë[ƒ{[ƒh]Ë[ESP32 Wrover Module]
+* Arduino IDEï¼š[ãƒ„ãƒ¼ãƒ«]â‡’[ãƒœãƒ¼ãƒ‰]â‡’[ESP32 Wrover Module]
 * PSRAM : Enable
 
-## ŠÖ˜Aî•ñ
+## é–¢é€£æƒ…å ±
 
-* [2000‰~‚ÌTTGO T-CameraFWi-Fi{LŠpƒŒƒ“ƒY•tƒJƒƒ‰{OLED{lŠ´ƒZƒ“ƒT](https://bokunimo.net/blog/esp/12/)(“–•ûƒuƒƒO)
-* »•i‚Ì”Ì”„ƒTƒCƒgF<https://www.aliexpress.com/item//32968683765.html>
-* ”Ì”„ÒGitHubF<https://github.com/Xinyuan-LilyGO/esp32-camera-bme280>
-* ŠJ”­ÒGitHubF<https://github.com/lewisxhe/esp32-camera-series>
+* [2000å††ã®TTGO T-Cameraï¼šWi-Fiï¼‹åºƒè§’ãƒ¬ãƒ³ã‚ºä»˜ã‚«ãƒ¡ãƒ©ï¼‹OLEDï¼‹äººæ„Ÿã‚»ãƒ³ã‚µ](https://bokunimo.net/blog/esp/12/)(å½“æ–¹ãƒ–ãƒ­ã‚°)
+* è£½å“ã®è²©å£²ã‚µã‚¤ãƒˆï¼š<https://www.aliexpress.com/item//32968683765.html>
+* è²©å£²è€…GitHubï¼š<https://github.com/Xinyuan-LilyGO/esp32-camera-bme280>
+* é–‹ç™ºè€…GitHubï¼š<https://github.com/lewisxhe/esp32-camera-series>
 
-## ‚±‚Ìƒ\[ƒXƒR[ƒh‚É‚ÍA‰º‹L‚Ì»ì•¨‚ªŠÜ‚Ü‚ê‚Ü‚·B
-* ƒJƒƒ‰ŠÇ—•”Fhttps://github.com/lewisxhe/esp32-camera-series  
-* ƒ{ƒ^ƒ“‘€ì•”Fhttps://github.com/mathertel/OneButton  
-* Wi-FiƒJƒƒ‰•”Fhttps://github.com/espressif/arduino-esp32  
+## ã“ã®ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã«ã¯ã€ä¸‹è¨˜ã®è£½ä½œç‰©ãŒå«ã¾ã‚Œã¾ã™ã€‚
+* ã‚«ãƒ¡ãƒ©ç®¡ç†éƒ¨ï¼šhttps://github.com/lewisxhe/esp32-camera-series  
+* ãƒœã‚¿ãƒ³æ“ä½œéƒ¨ï¼šhttps://github.com/mathertel/OneButton  
+* Wi-Fiã‚«ãƒ¡ãƒ©éƒ¨ï¼šhttps://github.com/espressif/arduino-esp32  
 
 by <https://bokunimo.net>
 
 --------------------------------------------------------------------------------
-ˆÈ‰º‚ÍAŒ´ì‚ÌREADME.md‚Å‚·B  
+ä»¥ä¸‹ã¯ã€åŸä½œã®README.mdã§ã™ã€‚  
 
 --------------------------------------------------------------------------------
 TTGO-Camera-Series
