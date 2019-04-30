@@ -401,6 +401,15 @@ void setup()
     Serial.print("Camera Ready! Use 'http://");
     Serial.print(ip);
     Serial.println("' to connect");
+    delay(200);                             // 待ち時間
+    
+    WiFiUDP udp;                            // UDP通信用のインスタンスを定義
+    String S = String(DEVICE_CAM) + String(0) + ", http://" + ip + "/cam.jpg";
+    udp.beginPacket(SENDTO, PORT);          // UDP送信先を設定
+    udp.println(S);
+    udp.endPacket();                        // UDP送信の終了(実際に送信する)
+    Serial.println(S);
+    delay(200);                             // 送信待ち時間
 }
 
 void loop()
