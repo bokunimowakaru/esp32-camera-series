@@ -22,7 +22,7 @@ iot-camera.ino の下記の部分を変更してください。
 
 
 ## コンパイル方法
-Arduino IDEに、[arduino-esp32](https://github.com/espressif/arduino-esp32/releases)ならびに[esp8266-oled-ssd1306](https://github.com/ThingPulse/esp8266-oled-ssd1306) を組み込んで、コンパイルを行います。arduino-esp32のは 1.0.2 を使用しました。  
+Arduino IDEに、[arduino-esp32](https://github.com/espressif/arduino-esp32/releases)ならびに[esp8266-oled-ssd1306](https://github.com/ThingPulse/esp8266-oled-ssd1306) を組み込んで、コンパイルを行います。arduino-esp32のバージョンは 1.0.2 を使用しました。  
 ※ご注意：バージョン1.0.0には本カメラ用ライブラリが含まれていないので、動作しません。  
 
 コンパイル時に必要なライブラリ：  
@@ -55,9 +55,16 @@ PSRAMを使用しているので、PSRAMの有効／無効の設定が表示さ�
 * 開発者GitHub：<https://github.com/lewisxhe/esp32-camera-series>
 
 ## このソースコードには、下記の製作物が含まれます。
+
 * カメラ管理部：https://github.com/lewisxhe/esp32-camera-series  
 * ボタン操作部：https://github.com/mathertel/OneButton  
 * Wi-Fiカメラ部：https://github.com/espressif/arduino-esp32  
+
+# ご注意・外部から不正に侵入されると、室内の様子などが流出してしまいます。
+
+本ソフトウェアの配布にあたり、SSIDとパスワードを公開しています。Wi-Fiカメラが動作する周囲では、当該パスワードを利用することで、本カメラへアクセスすることが出来、実験中の室内の様子などが外部に流出してしまう場合があります。
+また、うっかり電源を切り忘れたままにしてしまうと、常に室内の様子が閲覧可能な状態になってしまいます。十分にご注意ください。
+玄関に設置した場合であっても、カメラが死角となる範囲の情報が得られたり、撮影した写真を別の写真で上書きするといったことも可能なので、運用時はSSIDやパスワードの変更が必要です。
 
 by <https://bokunimo.net>
 
