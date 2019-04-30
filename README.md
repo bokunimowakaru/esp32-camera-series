@@ -35,6 +35,18 @@ PSRAMを使用しているので、PSRAMの有効／無効の設定が表示さ�
 * Arduino IDE：[ツール]⇒[ボード]⇒[ESP32 Wrover Module]
 * PSRAM : Enable
 
+## Raspberry Pi側の実行方法
+
+同じWi-Fiに接続したRaspberry Piで下記のコマンドを実行するとサーバが起動します。
+
+	cd
+	git clone https://github.com/bokunimowakaru/iot-camera
+	cd ~/iot-camera
+	./iot-cam_serv.sh
+
+サーバが起動した状態で、TTGO T-Camera ESP32のリセットボタン（RST）を押すと、カメラのIPアドレスがサーバへ送信され、以降、人感センサが反応するたびに、写真を撮影し、Raspberry Piへ保存します。
+
+
 ## 関連情報
 
 * [2000円のTTGO T-Camera：Wi-Fi＋広角レンズ付カメラ＋OLED＋人感センサ](https://bokunimo.net/blog/esp/12/)(当方ブログ)
