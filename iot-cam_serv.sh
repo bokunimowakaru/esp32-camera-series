@@ -46,7 +46,7 @@ while true; do                                      # 永遠に繰り返し
         if [ $? -eq 0 ]; then
             echo " OK"
         else
-            echo "ERROR"
+            echo " ERROR"
         fi
         SFX=`date "+%Y%m%d-%H%M"`                   # 撮影日時を取得し変数SFXへ
         mv cam.jpg photo/$FILE"_"$SFX.jpg >& /dev/null
