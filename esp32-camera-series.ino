@@ -1,23 +1,27 @@
 #include <WiFi.h>
-#include <OneButton.h>
+#include <WiFiUdp.h>                    // UDP通信を行うライブラリ
+#include "OneButton.h"
 #include "freertos/event_groups.h"
 #include <Wire.h>
-#include <Adafruit_BME280.h>
+// #include <Adafruit_BME280.h>         // 最新のTTGO T-Cameraには非搭載
 #include "esp_camera.h"
 #include "esp_wifi.h"
+#include "app_httpd.h"
+
 /***************************************
  *  Board select
  **************************************/
 //! If you use OV2640_V16 microphone version, please enable this macro
-// #define TTGO_OV2640_V16 
+// #define TTGO_OV2640_V16              // マイクロホン付きバージョン用
 
 
 /***************************************
  *  Modules
  **************************************/
 #define ENABLE_SSD1306
-#define SOFTAP_MODE       //The comment will be connected to the specified ssid
-// #define ENABLE_BME280
+// The comment will be connected to the specified ssid
+// #define SOFTAP_MODE                  // STAモード用
+// #define ENABLE_BME280                // 環境センサBME280用
 #define ENABLE_SLEEP
 #define ENABLE_IP5306
 
@@ -25,67 +29,65 @@
 /***************************************
  *  WiFi
  **************************************/
-#define WIFI_SSID   "your wifi ssid"
-#define WIFI_PASSWD "you wifi password"
-
-
+#define WIFI_SSID   "1234ABCD"          // your wifi ssid
+#define WIFI_PASSWD "password"          // your wifi password
 
 /***************************************
  *  PinOUT
  **************************************/
 #ifdef TTGO_OV2640_V16
-#define PWDN_GPIO_NUM       -1
-#define RESET_GPIO_NUM      -1
-#define XCLK_GPIO_NUM       4
-#define SIOD_GPIO_NUM       18
-#define SIOC_GPIO_NUM       23
+    #define PWDN_GPIO_NUM       -1
+    #define RESET_GPIO_NUM      -1
+    #define XCLK_GPIO_NUM       4
+    #define SIOD_GPIO_NUM       18
+    #define SIOC_GPIO_NUM       23
 
-#define Y9_GPIO_NUM         36
-#define Y8_GPIO_NUM         15
-#define Y7_GPIO_NUM         12
-#define Y6_GPIO_NUM         39
-#define Y5_GPIO_NUM         35
-#define Y4_GPIO_NUM         14
-#define Y3_GPIO_NUM         13
-#define Y2_GPIO_NUM         34
-#define VSYNC_GPIO_NUM      5
-#define HREF_GPIO_NUM       27
-#define PCLK_GPIO_NUM       25
-#define AS312_PIN           19
-#define BUTTON_1            0
-#undef ENABLE_BME280
-#undef ENABLE_IP5306
+    #define Y9_GPIO_NUM         36
+    #define Y8_GPIO_NUM         15
+    #define Y7_GPIO_NUM         12
+    #define Y6_GPIO_NUM         39
+    #define Y5_GPIO_NUM         35
+    #define Y4_GPIO_NUM         14
+    #define Y3_GPIO_NUM         13
+    #define Y2_GPIO_NUM         34
+    #define VSYNC_GPIO_NUM      5
+    #define HREF_GPIO_NUM       27
+    #define PCLK_GPIO_NUM       25
+    #define AS312_PIN           19
+    #define BUTTON_1            0
+    #undef ENABLE_BME280
+    #undef ENABLE_IP5306
 #else
-#define PWDN_GPIO_NUM       26
-#define RESET_GPIO_NUM      -1
-#define XCLK_GPIO_NUM       32
-#define SIOD_GPIO_NUM       13
-#define SIOC_GPIO_NUM       12
+    #define PWDN_GPIO_NUM       26
+    #define RESET_GPIO_NUM      -1
+    #define XCLK_GPIO_NUM       32
+    #define SIOD_GPIO_NUM       13
+    #define SIOC_GPIO_NUM       12
 
-#define Y9_GPIO_NUM         39
-#define Y8_GPIO_NUM         36
-#define Y7_GPIO_NUM         23
-#define Y6_GPIO_NUM         18
-#define Y5_GPIO_NUM         15
-#define Y4_GPIO_NUM         4
-#define Y3_GPIO_NUM         14
-#define Y2_GPIO_NUM         5
-#define VSYNC_GPIO_NUM      27
-#define HREF_GPIO_NUM       25
-#define PCLK_GPIO_NUM       19
-#define AS312_PIN           33
-#define BUTTON_1            34
+    #define Y9_GPIO_NUM         39
+    #define Y8_GPIO_NUM         36
+    #define Y7_GPIO_NUM         23
+    #define Y6_GPIO_NUM         18
+    #define Y5_GPIO_NUM         15
+    #define Y4_GPIO_NUM         4
+    #define Y3_GPIO_NUM         14
+    #define Y2_GPIO_NUM         5
+    #define VSYNC_GPIO_NUM      27
+    #define HREF_GPIO_NUM       25
+    #define PCLK_GPIO_NUM       19
+    #define AS312_PIN           33
+    #define BUTTON_1            34
 #endif
 
 #define I2C_SDA             21
 #define I2C_SCL             22
 
 #ifdef ENABLE_SSD1306
-#include "SSD1306.h"
-#include "OLEDDisplayUi.h"
-#define SSD1306_ADDRESS 0x3c
-SSD1306 oled(SSD1306_ADDRESS, I2C_SDA, I2C_SCL);
-OLEDDisplayUi ui(&oled);
+    #include "SSD1306.h"
+    #include "OLEDDisplayUi.h"
+    #define SSD1306_ADDRESS 0x3c
+    SSD1306 oled(SSD1306_ADDRESS, I2C_SDA, I2C_SCL);
+    OLEDDisplayUi ui(&oled);
 #endif
 
 String ip;
@@ -94,15 +96,21 @@ EventGroupHandle_t evGroup;
 OneButton button1(BUTTON_1, true);
 
 #ifdef ENABLE_BME280
-#define BEM280_ADDRESS 0X77
-#define SEALEVELPRESSURE_HPA (1013.25)
-Adafruit_BME280 bme;
+    #define BEM280_ADDRESS 0X77
+    #define SEALEVELPRESSURE_HPA (1013.25)
+    Adafruit_BME280 bme;
 #endif
 
 
 #define IP5306_ADDR 0X75
 #define IP5306_REG_SYS_CTL0 0x00
 
+#define SENDTO "255.255.255.255"            // 送信先のIPアドレス
+#define PORT 1024                           // 送信のポート番号
+#define DEVICE_PIR "pir_s_5,"               // デバイス名(人感センサ)
+#define DEVICE_CAM "cam_a_5,"               // デバイス名(カメラ)
+int pir=0;                                  // 人感センサ値
+int count=0;
 
 void startCameraServer();
 char buff[128];
@@ -166,14 +174,17 @@ void drawFrame1(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int1
     display->setTextAlignment(TEXT_ALIGN_CENTER);
 #ifdef SOFTAP_MODE
     display->setFont(ArialMT_Plain_10);
-    display->drawString(64 + x, 25 + y, buff);
+    display->drawString(64 + x, 15 + y, buff);
 #else
     display->setFont(ArialMT_Plain_16);
+    display->drawString(64 + x, 2 + y, "TTGO Camera");
+    display->setFont(ArialMT_Plain_10);
+    display->drawString(64 + x, 16 + y, "forked by Wataru KUNINO");
     display->drawString(64 + x, 35 + y, ip);
 #endif
 
     if (digitalRead(AS312_PIN)) {
-        display->drawString(64 + x, 5 + y, "AS312 Trigger");
+        display->drawString(64 + x, 45 + y, "Triggered by PIR");
     }
 }
 
@@ -199,13 +210,35 @@ void drawFrame2(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int1
 #else
     display->setTextAlignment(TEXT_ALIGN_CENTER);
     display->setFont(ArialMT_Plain_10);
-    display->drawString( 64 + x, 5 + y, "Camera Ready! Use");
-    display->drawString(64 + x, 25 + y, "http://" + ip );
-    display->drawString(64 + x, 45 + y, "to connect");
+    display->drawString(64 + x, 5 + y, "Camera Ready to Use");
+    display->drawString(64 + x, 15 + y, "http://" + ip );
+    display->drawString(64 + x, 25 + y, "to connect");
+    if (digitalRead(AS312_PIN)) {
+        display->drawString(64 + x, 45 + y, "Triggered by PIR");
+    }
 #endif
 }
 
-FrameCallback frames[] = {drawFrame1, drawFrame2};
+void drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
+{
+#ifndef SOFTAP_MODE
+    display->setTextAlignment(TEXT_ALIGN_LEFT);
+    display->setFont(ArialMT_Plain_10);
+    display->drawString(0 + x,  0 + y, "Wi-Fi SSID:");
+    display->setTextAlignment(TEXT_ALIGN_CENTER);
+    display->drawString(64 + x, 10 + y, WIFI_SSID );
+    display->setTextAlignment(TEXT_ALIGN_LEFT);
+    display->drawString(0 + x, 22 + y, "PASSWORD:");
+    display->setTextAlignment(TEXT_ALIGN_CENTER);
+    display->drawString(64 + x, 32 + y, WIFI_PASSWD );
+#endif
+    if (digitalRead(AS312_PIN)) {
+        display->setTextAlignment(TEXT_ALIGN_CENTER);
+        display->drawString(64 + x, 45 + y, "Triggered by PIR");
+    }
+}
+
+FrameCallback frames[] = {drawFrame1, drawFrame3, drawFrame2};
 #define FRAMES_SIZE (sizeof(frames) / sizeof(frames[0]))
 #endif
 
@@ -218,6 +251,7 @@ void setup()
     Serial.setDebugOutput(true);
     Serial.println();
 
+    Serial.println("TTGO-CAMERA started");
 
     pinMode(AS312_PIN, INPUT);
 
@@ -234,8 +268,11 @@ void setup()
     oled.setFont(ArialMT_Plain_16);
     oled.setTextAlignment(TEXT_ALIGN_CENTER);
     delay(50);
-    oled.drawString(x, y - 10, "TTGO Camera");
+    oled.drawString(x, y - 12, "TTGO Camera");
+    oled.setFont(ArialMT_Plain_10);
+    oled.drawString(x, y + 2, "forked by Wataru KUNINO");
     oled.display();
+    Serial.println("SSD1306 started");
 #endif
 
 #ifdef ENABLE_IP5306
@@ -246,6 +283,7 @@ void setup()
     oled.display();
     oled.setFont(ArialMT_Plain_16);
     delay(1000);
+    Serial.println("IP5306 started");
 #endif
 
 #ifdef ENABLE_BME280
@@ -253,6 +291,7 @@ void setup()
         Serial.println("Could not find a valid BME280 sensor, check wiring!");
         while (1);
     }
+    Serial.println("BME280 started");
 #endif
 
     if (!(evGroup = xEventGroupCreate())) {
@@ -307,6 +346,7 @@ void setup()
 #endif
         while (1);
     }
+    Serial.println("OV2640 started");
 
     //drop down frame size for higher initial frame rate
     sensor_t *s = esp_camera_sensor_get();
@@ -315,6 +355,7 @@ void setup()
     button1.attachLongPressStart(buttonLongPress);
     button1.attachClick(buttonClick);
 
+    Serial.println("Starting Wi-Fi");
 #ifdef SOFTAP_MODE
     uint8_t mac[6];
     WiFi.mode(WIFI_AP);
@@ -364,11 +405,40 @@ void setup()
 
 void loop()
 {
-#ifdef ENABLE_SSD1306
-    if (ui.update()) {
-#endif
+    WiFiUDP udp;                            // UDP通信用のインスタンスを定義
+    
+    #ifdef ENABLE_SSD1306
+        if (ui.update()) {
+            button1.tick();
+        }
+    #else
         button1.tick();
-#ifdef ENABLE_SSD1306
+    #endif
+    if( pir == digitalRead(AS312_PIN) ) return;
+    pir = !pir;
+    if( pir == 0 ) return;
+    /*
+    camera_fb_t * capture_jpg_fb = ino_esp_camera_fb_get();
+    if (!capture_jpg_fb) {
+        Serial.println("Camera capture failed");
+        return;
     }
-#endif
+    */
+    
+    String S;
+    
+    S = String(DEVICE_PIR) + String(pir);
+    udp.beginPacket(SENDTO, PORT);          // UDP送信先を設定
+    udp.println(S);                         // センサ状態(常に1)を送信
+    udp.endPacket();                        // UDP送信の終了(実際に送信する)
+    Serial.println(S);
+    delay(200);                             // 送信待ち時間
+    /*
+    S = String(DEVICE_CAM) + String(capture_jpg_fb->len) + ", http://" + ip + "/cam.jpg";
+    udp.beginPacket(SENDTO, PORT);          // UDP送信先を設定
+    udp.println(S);
+    udp.endPacket();                        // UDP送信の終了(実際に送信する)
+    Serial.println(S);
+    delay(200);                             // 送信待ち時間
+    */
 }

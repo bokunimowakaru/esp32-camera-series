@@ -11,6 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// 元ファイルの場所：
+// C:\Users\wataru\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.2\libraries\ESP32\examples\Camera\CameraWebServer
+
+// こんなことも書いてあった：
+// WARNING!!! Make sure that you have either selected ESP32 Wrover Module,
+//            or another board which has PSRAM enabled
+
 #include "esp_http_server.h"
 #include "esp_timer.h"
 #include "esp_camera.h"
@@ -80,6 +88,59 @@ static size_t jpg_encode_stream(void * arg, size_t index, const void* data, size
     return len;
 }
 
+/*  人感センサが動態検知したときのバッファ位置を保存する
+camera_fb_t * capture_jpg_fb = NULL;
+camera_fb_t * ino_esp_camera_fb_get(){
+	capture_jpg_fb = esp_camera_fb_get();
+	return capture_jpg_fb;
+}
+
+camera_fb_t * ino_esp_camera_fb_read(){
+	return capture_jpg_fb;
+}
+*/
+
+static esp_err_t capture_jpg_handler(httpd_req_t *req){
+    camera_fb_t * fb = NULL;
+    esp_err_t res = ESP_OK;
+    int64_t fr_start = esp_timer_get_time();
+
+    Serial.println("capture_jpg_handler");
+//  fb = ino_esp_camera_fb_read();
+    fb = esp_camera_fb_get();
+    if (!fb) {
+        Serial.println("Camera capture failed");
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    httpd_resp_set_type(req, "image/jpeg");
+    httpd_resp_set_hdr(req, "Connection", "close");
+
+    size_t fb_len = 0;
+    if(fb->format == PIXFORMAT_JPEG){
+        fb_len = fb->len;
+        Serial.println("httpd_resp_send");
+        res = httpd_resp_send(req, (const char *)fb->buf, fb->len);
+    } else {
+        jpg_chunking_t jchunk = {req, 0};
+        res = frame2jpg_cb(fb, 80, jpg_encode_stream, &jchunk)?ESP_OK:ESP_FAIL;
+        Serial.println("httpd_resp_send_chunk");
+        httpd_resp_send_chunk(req, NULL, 0);
+        fb_len = jchunk.len;
+    }
+    esp_camera_fb_return(fb);
+    int64_t fr_end = esp_timer_get_time();
+    Serial.printf("JPG: %u Bytes %u ms\n", (uint32_t)(fb_len), (uint32_t)((fr_end - fr_start)/1000));
+    return res;
+}
+/* @brief   API to send a complete HTTP response.
+ *      httpd_resp_set_status() - for setting the HTTP status string,
+ *      httpd_resp_set_type()   - for setting the Content Type,
+ *      httpd_resp_set_hdr()    - for appending any additional field
+ *                                value entries in the response header
+*/
+
 static esp_err_t capture_handler(httpd_req_t *req){
     camera_fb_t * fb = NULL;
     esp_err_t res = ESP_OK;
@@ -87,7 +148,7 @@ static esp_err_t capture_handler(httpd_req_t *req){
 
     fb = esp_camera_fb_get();
     if (!fb) {
-        Serial.printf("Camera capture failed");
+        Serial.printf("Camera capture failed\n");
         httpd_resp_send_500(req);
         return ESP_FAIL;
     }
@@ -107,7 +168,7 @@ static esp_err_t capture_handler(httpd_req_t *req){
     }
     esp_camera_fb_return(fb);
     int64_t fr_end = esp_timer_get_time();
-    Serial.printf("JPG: %uB %ums", (uint32_t)(fb_len), (uint32_t)((fr_end - fr_start)/1000));
+    Serial.printf("JPG: %u Bytes %u ms\n", (uint32_t)(fb_len), (uint32_t)((fr_end - fr_start)/1000));
     return res;
 }
 
@@ -136,7 +197,7 @@ static esp_err_t stream_handler(httpd_req_t *req){
 
         fb = esp_camera_fb_get();
         if (!fb) {
-            Serial.printf("Camera capture failed");
+            Serial.printf("Camera capture failed\n");
             res = ESP_FAIL;
         } else {
             if(fb->format != PIXFORMAT_JPEG){
@@ -144,7 +205,7 @@ static esp_err_t stream_handler(httpd_req_t *req){
                 esp_camera_fb_return(fb);
                 fb = NULL;
                 if(!jpeg_converted){
-                    Serial.printf("JPEG compression failed");
+                    Serial.printf("JPEG compression failed\n");
                     res = ESP_FAIL;
                 }
             } else {
@@ -331,6 +392,14 @@ void startCameraServer(){
         .user_ctx  = NULL
     };
 
+	/* cam.jpg ハンドラ追加 */
+    httpd_uri_t capture_jpg = {
+        .uri       = "/cam.jpg",
+        .method    = HTTP_GET,
+        .handler   = capture_jpg_handler,
+        .user_ctx  = NULL
+    };
+
     httpd_uri_t capture_uri = {
         .uri       = "/capture",
         .method    = HTTP_GET,
@@ -345,19 +414,19 @@ void startCameraServer(){
         .user_ctx  = NULL
     };
 
-
     ra_filter_init(&ra_filter, 20);
-    Serial.printf("Starting web server on port: '%d'", config.server_port);
+    Serial.printf("Starting web server on port: '%d'\n", config.server_port);
     if (httpd_start(&camera_httpd, &config) == ESP_OK) {
         httpd_register_uri_handler(camera_httpd, &index_uri);
         httpd_register_uri_handler(camera_httpd, &cmd_uri);
         httpd_register_uri_handler(camera_httpd, &status_uri);
         httpd_register_uri_handler(camera_httpd, &capture_uri);
+        httpd_register_uri_handler(camera_httpd, &capture_jpg);
     }
 
     config.server_port += 1;
     config.ctrl_port += 1;
-    Serial.printf("Starting stream server on port: '%d'", config.server_port);
+    Serial.printf("Starting stream server on port: '%d'\n", config.server_port);
     if (httpd_start(&stream_httpd, &config) == ESP_OK) {
         httpd_register_uri_handler(stream_httpd, &stream_uri);
     }
