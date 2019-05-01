@@ -128,6 +128,27 @@ bool setPowerBoostKeepOn(int en)
 }
 #endif
 
+void sendUdp_Ident(){
+    WiFiUDP udp;                            // UDP通信用のインスタンスを定義
+    String S = String(DEVICE_CAM) + String(0) + ", http://" + ip + "/cam.jpg";
+    udp.beginPacket(SENDTO, PORT);          // UDP送信先を設定
+    udp.println(S);
+    udp.endPacket();                        // UDP送信の終了(実際に送信する)
+    Serial.println(S);
+    delay(200);                             // 送信待ち時間
+}
+
+void sendUdp_Pir(int pir){
+    WiFiUDP udp;                            // UDP通信用のインスタンスを定義
+    String S;
+    S = String(DEVICE_PIR) + String(pir);
+    udp.beginPacket(SENDTO, PORT);          // UDP送信先を設定
+    udp.println(S);                         // センサ状態を送信
+    udp.endPacket();                        // UDP送信の終了(実際に送信する)
+    Serial.println(S);
+    delay(200);                             // 送信待ち時間
+}
+    
 void buttonClick()
 {
     static bool en = false;
@@ -137,6 +158,7 @@ void buttonClick()
     s->set_vflip(s, en);
     delay(200);
     xEventGroupSetBits(evGroup, 1);
+    sendUdp_Ident();
 }
 
 void buttonLongPress()
@@ -331,7 +353,7 @@ void setup()
     config.xclk_freq_hz = 20000000;
     config.pixel_format = PIXFORMAT_JPEG;
     //init with high specs to pre-allocate larger buffers
-    config.frame_size = FRAMESIZE_UXGA;
+    config.frame_size = FRAMESIZE_QVGA;
     config.jpeg_quality = 10;
     config.fb_count = 2;
 
@@ -402,20 +424,11 @@ void setup()
     Serial.print(ip);
     Serial.println("' to connect");
     delay(200);                             // 待ち時間
-    
-    WiFiUDP udp;                            // UDP通信用のインスタンスを定義
-    String S = String(DEVICE_CAM) + String(0) + ", http://" + ip + "/cam.jpg";
-    udp.beginPacket(SENDTO, PORT);          // UDP送信先を設定
-    udp.println(S);
-    udp.endPacket();                        // UDP送信の終了(実際に送信する)
-    Serial.println(S);
-    delay(200);                             // 送信待ち時間
+    sendUdp_Ident();                        // 本機のIPアドレスを送信する
 }
 
 void loop()
 {
-    WiFiUDP udp;                            // UDP通信用のインスタンスを定義
-    
     #ifdef ENABLE_SSD1306
         if (ui.update()) {
             button1.tick();
@@ -433,21 +446,5 @@ void loop()
         return;
     }
     */
-    
-    String S;
-    
-    S = String(DEVICE_PIR) + String(pir);
-    udp.beginPacket(SENDTO, PORT);          // UDP送信先を設定
-    udp.println(S);                         // センサ状態を送信
-    udp.endPacket();                        // UDP送信の終了(実際に送信する)
-    Serial.println(S);
-    delay(200);                             // 送信待ち時間
-    /*
-    S = String(DEVICE_CAM) + String(capture_jpg_fb->len) + ", http://" + ip + "/cam.jpg";
-    udp.beginPacket(SENDTO, PORT);          // UDP送信先を設定
-    udp.println(S);
-    udp.endPacket();                        // UDP送信の終了(実際に送信する)
-    Serial.println(S);
-    delay(200);                             // 送信待ち時間
-    */
+    sendUdp_Pir(pir);
 }
