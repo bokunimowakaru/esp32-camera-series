@@ -425,7 +425,7 @@ void loop()
     #endif
     if( pir == digitalRead(AS312_PIN) ) return;
     pir = !pir;
-    if( pir == 0 ) return;
+//  if( pir == 0 ) return;                  // コメントを外すと検知時のみに送信
     /*
     camera_fb_t * capture_jpg_fb = ino_esp_camera_fb_get();
     if (!capture_jpg_fb) {
@@ -438,7 +438,7 @@ void loop()
     
     S = String(DEVICE_PIR) + String(pir);
     udp.beginPacket(SENDTO, PORT);          // UDP送信先を設定
-    udp.println(S);                         // センサ状態(常に1)を送信
+    udp.println(S);                         // センサ状態を送信
     udp.endPacket();                        // UDP送信の終了(実際に送信する)
     Serial.println(S);
     delay(200);                             // 送信待ち時間
