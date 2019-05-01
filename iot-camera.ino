@@ -352,10 +352,9 @@ void setup()
     config.pin_reset = RESET_GPIO_NUM;
     config.xclk_freq_hz = 20000000;
     config.pixel_format = PIXFORMAT_JPEG;
-    //init with high specs to pre-allocate larger buffers
-    config.frame_size = FRAMESIZE_QVGA;
+    config.frame_size = FRAMESIZE_UXGA;		//init with high specs to pre-allocate larger buffers
     config.jpeg_quality = 10;
-    config.fb_count = 2;
+    config.fb_count = 2;					// 
 
     // camera init
     esp_err_t err = esp_camera_init(&config);
