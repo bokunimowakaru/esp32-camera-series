@@ -44,7 +44,7 @@ PSRAMを使用しているので、PSRAMの有効／無効の設定が表示さ�
 	cd ~/iot-camera
 	./iot-cam_serv.sh
 
-サーバが起動した状態で、TTGO T-Camera ESP32のリセットボタン（RST）を押すと、カメラのIPアドレスがサーバへ送信され、以降、人感センサが反応するたびに、写真を撮影し、Raspberry Piへ保存します。
+サーバが起動した状態で、TTGO T-Camera ESP32のボタン（IO34またはRST）を押すと、カメラのIPアドレスがサーバへ送信され、以降、人感センサが反応するたびに、写真を撮影し、Raspberry Piへ保存します。
 
 ## M5Stackの液晶ディスプレイへ表示する
 
