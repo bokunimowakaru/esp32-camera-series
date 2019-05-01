@@ -46,6 +46,13 @@ PSRAMを使用しているので、PSRAMの有効／無効の設定が表示さ�
 
 サーバが起動した状態で、TTGO T-Camera ESP32のリセットボタン（RST）を押すと、カメラのIPアドレスがサーバへ送信され、以降、人感センサが反応するたびに、写真を撮影し、Raspberry Piへ保存します。
 
+## M5Stackの液晶ディスプレイへ表示する
+
+Wi-Fiカメラからの画像をM5Stackへ表示することが出来るフォトフレーム用ソフトも公開中です。  
+
+TTGO T-Camera+M5StackでWi-Fiカメラ  
+* ブログ記事：https://bokunimo.net/blog/esp/420/
+* レポジトリ：https://github.com/bokunimowakaru/iot-photo
 
 ## 関連情報
 
