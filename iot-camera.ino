@@ -234,7 +234,6 @@ void drawFrame2(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int1
     display->setFont(ArialMT_Plain_10);
     display->drawString(64 + x, 5 + y, "Camera Ready to Use");
     display->drawString(64 + x, 15 + y, "http://" + ip );
-    display->drawString(64 + x, 25 + y, "to connect");
     if (digitalRead(AS312_PIN)) {
         display->drawString(64 + x, 45 + y, "Triggered by PIR");
     }
