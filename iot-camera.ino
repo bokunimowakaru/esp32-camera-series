@@ -282,6 +282,9 @@ void setup()
 #ifdef ENABLE_IP5306
     bool   isOk = setPowerBoostKeepOn(1);
     String info = "IP5306 KeepOn " + String((isOk ? "PASS" : "FAIL"));
+#else
+    bool   isOk = true;
+    String info = "IP5306 Disabled";
 #endif
 
 #ifdef ENABLE_SSD1306
@@ -392,10 +395,35 @@ void setup()
         while (1);
     }
 #else
+
+    delay(1000);
+    
+    oled.setFont(ArialMT_Plain_10);
+    oled.clear();
+    
+    oled.setTextAlignment(TEXT_ALIGN_LEFT);
+    oled.setFont(ArialMT_Plain_10);
+    oled.drawString(0 ,  0, "Wi-Fi SSID:");
+    oled.setTextAlignment(TEXT_ALIGN_CENTER);
+    oled.drawString(64 , 10, WIFI_SSID );
+    oled.setTextAlignment(TEXT_ALIGN_LEFT);
+    oled.drawString(0 , 22, "PASSWORD:");
+    oled.setTextAlignment(TEXT_ALIGN_CENTER);
+    oled.drawString(64 , 32, WIFI_PASSWD );
+    
+    oled.display();
+    delay(1000);
+    
     WiFi.begin(WIFI_SSID, WIFI_PASSWD);
+    int i;
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         Serial.print(".");
+        oled.setTextAlignment(TEXT_ALIGN_LEFT);
+        oled.drawString(i*4, 48,".");
+        oled.display();
+        i++;
+        if( i*4 > 127) i=0;
     }
     Serial.println("");
     Serial.println("WiFi connected");
