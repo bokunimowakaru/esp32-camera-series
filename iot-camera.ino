@@ -415,15 +415,16 @@ void setup()
     delay(1000);
     
     WiFi.begin(WIFI_SSID, WIFI_PASSWD);
-    int i;
+    int i=0;
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         Serial.print(".");
+        oled.setFont(ArialMT_Plain_10);
         oled.setTextAlignment(TEXT_ALIGN_LEFT);
-        oled.drawString(i*4, 48,".");
+        oled.drawString(i * 4, 48,".");
         oled.display();
         i++;
-        if( i*4 > 127) i=0;
+        if( i * 4 > 127) i=0;
     }
     Serial.println("");
     Serial.println("WiFi connected");
