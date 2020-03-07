@@ -10,7 +10,8 @@ STAモード、SSID=1234ABCD、パスワード=passwordを設定しました。
 
 ## コンパイル済みファームウェアの種類
 
-以下の2種類があります。TTGO T-Cameraボードのバージョン（基板の裏面にシルク印字あり）に合わせて使用してください。
+フォルダ[target](https://github.com/bokunimowakaru/iot-camera/tree/master/target)内に、以下の2種類のファームウェアを保存しました。
+TTGO T-Cameraボードのバージョン（基板の裏面にシルク印字を参照）に合わせて使用してください。
 
 * iot-camera_V05.ino.bin: TTGO T-Camera OV2640_V05用(マイクロホンなし初期バージョン用)
 * iot-camera_V16.ino.bin: TTGO T-Camera OV2640_V1.6用(マイクロホン付きバージョン用)
