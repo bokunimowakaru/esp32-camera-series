@@ -1,15 +1,15 @@
 # TTGO T-Camera ESP32 OV2640  
 forked by Wataru KUNINO  
 
-Wi-Fi＋カメラ搭載ボードTTGO T-Camera ESP32が、人体などの動きを検出すると、Raspberry Piへ写真を保存します。
+Wi-Fi ＋カメラ搭載ボード TTGO T-Camera ESP32 が、人体などの動きを検出すると、写真を撮影し、 Raspberry Pi へ保存します。
 
-* Wi-Fi マイコンESP32と、JPEGカメラPV2640を搭載したTTGO T-Camera用のファームウェアです。  
-* TTGO T-Cameraの人感センサが作動したときにUDPブロードキャストを送信します。  
-* UDPブロードキャストを受けた Raspberry Pi などに撮影した写真を保存することが出来ます。  
+* Wi-Fi マイコン ESP32 と、JPEGカメラ OV2640 を搭載した TTGO T-Camera 用のファームウェアです。  
+* TTGO T-Camera の人感センサが作動したときに UDP ブロードキャストを送信します。  
+* UDP ブロードキャストを受けた Raspberry Pi などに撮影した写真を保存することが出来ます。  
 
 STAモード、SSID=1234ABCD、パスワード=passwordを設定しました。  
-その他の機能については TTGO-Camera-Series (原作者：lewisxhe)のものなどを流用しています。
-
+その他の機能については TTGO-Camera-Series (原作者：lewisxhe)のものなどを流用しています。  
+  
 コンパイル済みファームウェアも提供しています。詳しくは、targetフォルダ内の[README.md](https://github.com/bokunimowakaru/iot-camera/blob/master/target/README.md)をご覧ください。  
 
 
