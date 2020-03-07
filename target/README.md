@@ -24,7 +24,9 @@ TTGO T-Cameraボードのバージョン（基板の裏面にシルク印字を�
 
 ## SSIDの変更方法
 
-ソースコードの変更が必要です。一つ上のディレクトリ内の[README.md](https://github.com/bokunimowakaru/iot-camera/blob/master/README.md)をご覧ください。
+コンパイル済みファームウェアのSSIDとPASSは固定値です。変更したい場合は、ソースコードの変更と再コンパイルが必要です。
+一つ上のディレクトリ内の[README.md](https://github.com/bokunimowakaru/iot-camera/blob/master/README.md)をご覧ください。  
+下記の「M5Stackの液晶ディスプレイへ表示する」では、同じSSIDとPASSを使用しているので、コンパイル済みファームウェアを利用することができます。
 
 ## M5Stackの液晶ディスプレイへ表示する
 
