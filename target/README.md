@@ -1,4 +1,4 @@
-# TTGO T-Camera ESP32 OV2640  
+# 【コンパイル済みファームウェア】TTGO T-Camera ESP32 OV2640  
 forked by Wataru KUNINO  
 
 Wi-Fi＋カメラ搭載ボードTTGO T-Camera ESP32が、人体などの動きを検出すると、Raspberry Piへ写真を保存します。
@@ -8,7 +8,9 @@ Wi-Fi＋カメラ搭載ボードTTGO T-Camera ESP32が、人体などの動き�
 STAモード、SSID=1234ABCD、パスワード=passwordを設定しました。  
 その他の機能については TTGO-Camera-Series (原作者：lewisxhe)のものなどを流用しています。
 
-##【コンパイル済みファームウェア】
+## コンパイル済みファームウェアの種類
+
+以下の2種類があります。TTGO T-Cameraボードのバージョン（基板の裏面にシルク印字あり）に合わせて使用してください。
 
 * iot-camera_V05.ino.bin: TTGO T-Camera OV2640_V05用(マイクロホンなし初期バージョン用)
 * iot-camera_V16.ino.bin: TTGO T-Camera OV2640_V1.6用(マイクロホン付きバージョン用)
@@ -67,16 +69,18 @@ TTGO T-Camera+M5StackでWi-Fiカメラ
 ### define設定
 
 * define ENABLE_SSD1306
-* undef SOFTAP_MODE                  // STAモード用
-* //define ENABLE_BME280                // 環境センサBME280用
+* (undef) //define SOFTAP_MODE                  // STAモード用
+* (undef) //define ENABLE_BME280                // 環境センサBME280用
 * define ENABLE_SLEEP
-* //define ENABLE_IP5306
-* define TTGO_OV2640_V16
+* define ENABLE_IP5306
+
+* define TTGO_OV2640_V16 // OV2640_V1.6用 ※ V05のときはundef
 
 * define SSID "1234ABCD"  
 * define PASS "password"  
 * define SENDTO "255.255.255.255"            // 送信先のIPアドレス
 * define PORT 1024                           // 送信のポート番号
+
 * define DEVICE_PIR "pir_s_5,"               // デバイス名(人感センサ)
 * define DEVICE_CAM "cam_a_5,"               // デバイス名(カメラ)
 

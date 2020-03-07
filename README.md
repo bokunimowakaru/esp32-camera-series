@@ -8,7 +8,7 @@ Wi-Fi＋カメラ搭載ボードTTGO T-Camera ESP32が、人体などの動き�
 * UDPブロードキャストを受けた Raspberry Pi などに撮影した写真を保存することが出来ます。  
 
 STAモード、SSID=1234ABCD、パスワード=passwordを設定しました。  
-その他の機能についてはは TTGO-Camera-Series (原作者：lewisxhe)のものなどを流用しています。
+その他の機能については TTGO-Camera-Series (原作者：lewisxhe)のものなどを流用しています。
 
 ## SSIDの変更方法
 
@@ -28,6 +28,12 @@ Arduino IDEに、[arduino-esp32](https://github.com/espressif/arduino-esp32/rele
 コンパイル時に必要なライブラリ：  
 * arduino-esp32：https://github.com/espressif/arduino-esp32/releases
 * esp8266-oled-ssd1306 https://github.com/ThingPulse/esp8266-oled-ssd1306
+
+TTGO T-Cameraボードのバージョン（基板の裏面にシルク印字あり）に合わせて#defineの設定変更が必要です。
+
+コンパイル時に必要なdefine設定：  
+* #undef TTGO_OV2640_V16	// TTGO T-Camera OV2640_V05用(マイクロホンなし初期バージョン用)
+* #define TTGO_OV2640_V16	// TTGO T-Camera OV2640_V1.6用(マイクロホン付きバージョン用)
 
 Arduino IDEの[ツール]メニュー⇒[ボード]から、「ESP32 Wrover Module」を選択してください。  
 PSRAMを使用しているので、PSRAMの有効／無効の設定が表示された場合は、必ず「有効」にしてください。  
